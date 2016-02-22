@@ -8,15 +8,16 @@ var IndexRoute = require('react-router').IndexRoute;
 var BenchStore = require('./stores/bench');
 var ApiUtil = require('./util/api_util');
 var ApiActions = require('./actions/api_actions');
-
 var Index = require('./components/index');
+
+var Search = require('./components/search');
 
 
 
 
 document.addEventListener("DOMContentLoaded", function () {
   ReactDOM.render(
-    <Index/>,
+    <Search />,
     document.getElementById('content')
   );
 });

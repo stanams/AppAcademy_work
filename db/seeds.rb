@@ -9,7 +9,7 @@
 10.times do
   Bench.create!(
   description: Faker::Lorem.sentence(3),
-  lat: Faker::Address.longitude,
-  lng: Faker::Address.latitude
+  lat: rand(36000..380000)/1000,
+  lng: rand(-122000..123000)/1000
   )
 end

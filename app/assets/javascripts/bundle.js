@@ -54,11 +54,12 @@
 	var BenchStore = __webpack_require__(206);
 	var ApiUtil = __webpack_require__(229);
 	var ApiActions = __webpack_require__(230);
+	var Index = __webpack_require__(232);
 	
-	var Index = __webpack_require__(231);
+	var Search = __webpack_require__(231);
 	
 	document.addEventListener("DOMContentLoaded", function () {
-	  ReactDOM.render(React.createElement(Index, null), document.getElementById('content'));
+	  ReactDOM.render(React.createElement(Search, null), document.getElementById('content'));
 	});
 	
 	window.BenchStore = BenchStore;
@@ -24010,12 +24011,19 @@
 	var _benches = [];
 	
 	BenchStore.all = function () {
-	  return _benches.slice(0);
+	  return _benches;
 	};
 	
-	var resetBenches = function (benches) {
-	  _benches = benches;
-	};
+	function resetBench(bench) {
+	  _benches[bench.id] = bench;
+	}
+	
+	function resetBenches(benches) {
+	  _benches = {};
+	  benches.forEach(function (bench, i) {
+	    resetBench(bench);
+	  });
+	}
 	
 	BenchStore.__onDispatch = function (payload) {
 	  switch (payload.actionType) {
@@ -30841,6 +30849,39 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
+	var Index = __webpack_require__(232);
+	var Map = __webpack_require__(233);
+	
+	var Search = React.createClass({
+	  displayName: 'Search',
+	
+	
+	  componentDidMount: function () {
+	    var mapDOMNode = this.refs.map;
+	    var mapOptions = {
+	      center: { lat: 37.7758, lng: -122.435 },
+	      zoom: 13
+	    };
+	    this.map = new google.maps.Map(mapDOMNode, mapOptions);
+	  },
+	
+	  render: function () {
+	    return React.createElement(
+	      'div',
+	      null,
+	      React.createElement(Map, null),
+	      React.createElement(Index, null)
+	    );
+	  }
+	});
+	
+	module.exports = Search;
+
+/***/ },
+/* 232 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var React = __webpack_require__(1);
 	var BenchStore = __webpack_require__(206);
 	var ApiUtil = __webpack_require__(229);
 	
@@ -30865,11 +30906,71 @@
 	  },
 	
 	  render: function () {
-	    return React.createElement('div', null);
+	    if (this.state.benches !== undefined) {
+	      var benches = Object.keys(this.state.benches).map(function (id, idx) {
+	        return React.createElement(
+	          'ul',
+	          { className: 'bench', key: id },
+	          React.createElement(
+	            'li',
+	            null,
+	            this.state.benches[id].description
+	          ),
+	          React.createElement(
+	            'li',
+	            null,
+	            this.state.benches[id].lat
+	          ),
+	          React.createElement(
+	            'li',
+	            null,
+	            this.state.benches[id].lng
+	          )
+	        );
+	      }.bind(this));
+	    } else {
+	      benches = React.createElement(
+	        'div',
+	        null,
+	        '"No benches here"'
+	      );
+	    }
+	    return React.createElement(
+	      'div',
+	      null,
+	      benches
+	    );
 	  }
 	});
 	
 	module.exports = Index;
+
+/***/ },
+/* 233 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var React = __webpack_require__(1);
+	
+	var Map = React.createClass({
+	  displayName: "Map",
+	
+	
+	  componentDidMount: function () {
+	    // BenchStore.addListener(this._onChange);
+	    var mapDOMNode = this.refs.map;
+	    var mapOptions = {
+	      center: { lat: 37.7758, lng: -122.435 },
+	      zoom: 13
+	    };
+	    this.map = new google.maps.Map(mapDOMNode, mapOptions);
+	  },
+	
+	  render: function () {
+	    return React.createElement("div", { className: "map", ref: "map" });
+	  }
+	});
+	
+	module.exports = Map;
 
 /***/ }
 /******/ ]);

@@ -21,12 +21,23 @@ var Index = React.createClass({
   },
 
   render: function(){
-    return(
-      <div>
-
-      </div>
-    );
-  }
+    if (this.state.benches !== undefined) {
+        var benches = Object.keys(this.state.benches).map(function(id, idx){
+          return (<ul className="bench" key={id}>
+            <li>{this.state.benches[id].description}</li>
+            <li>{this.state.benches[id].lat}</li>
+            <li>{this.state.benches[id].lng}</li>
+          </ul>);
+        }.bind(this));
+      } else {
+        benches = <div>"No benches here"</div>;
+      }
+      return (
+        <div>
+          {benches}
+        </div>
+      );
+    }
 });
 
 module.exports = Index;
